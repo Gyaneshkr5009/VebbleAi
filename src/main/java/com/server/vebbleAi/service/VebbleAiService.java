@@ -24,6 +24,10 @@ public class VebbleAiService {
     private String geminiApiKey;
 
     public String getReply(ChatRequest chatRequest){
+
+        if (chatRequest == null || chatRequest.getContent() == null) {
+            return "Error Processing Request: Request content cannot be empty.";
+        }
         //craft a request
         Map<String , Object> requestBody = Map.of(
                 "contents" , new Object[] {
@@ -41,6 +45,9 @@ public class VebbleAiService {
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(String.class)
+                .retryWhen(reactor.util.retry.Retry.backoff(2, java.time.Duration.ofSeconds(2))
+                        .filter(throwable -> throwable instanceof org.springframework.web.reactive.function.client.WebClientResponseException.TooManyRequests)
+                )
                 .block();
 
         return extractResponseContent(response);
