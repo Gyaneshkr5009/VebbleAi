@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: vebbleAi
+
+gemini:
+  api:
+    url: ${GEMINI_URL}
+    key1: ${GEMINI_KEY1}
+    key2: ${GEMINI_KEY2}
+    key3: ${GEMINI_KEY2}
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+
+server:
+  port: ${PORT:8080}
+
