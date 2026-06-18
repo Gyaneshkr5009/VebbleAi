@@ -7,7 +7,12 @@ gemini:
     url: ${GEMINI_URL}
     key1: ${GEMINI_KEY1}
     key2: ${GEMINI_KEY2}
-    key3: ${GEMINI_KEY2}
+    key3: ${GEMINI_KEY3}
+
+sarvam:
+  api:
+    url: ${SARVAM_URL}
+    key: ${SARVAM_KEY}
 
 cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}

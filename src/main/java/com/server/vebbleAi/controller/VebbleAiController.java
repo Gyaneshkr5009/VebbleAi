@@ -14,6 +14,7 @@ public class VebbleAiController {
 
     @PostMapping("/reply")
     public String generateReply(@RequestBody ChatRequest chatRequest){
+
         return vebbleAiService.getReply(chatRequest);
     }
 }

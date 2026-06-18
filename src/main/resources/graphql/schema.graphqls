@@ -1,0 +1,13 @@
+type Query {
+    newboard(limit: Int , difficulty : String): BoardResponse
+}
+type BoardResponse {
+    grids: [Grid]
+    results: Int
+    message: String
+}
+type Grid {
+    value: [[Int]]
+    solution: [[Int]]
+    difficulty: String
+}
