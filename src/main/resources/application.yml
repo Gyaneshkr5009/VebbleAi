@@ -1,6 +1,19 @@
 spring:
   application:
     name: vebbleAi
+  graphql:
+    http:
+      path: /api/games/sudoku-app
+    webmvc:
+      get:
+        enabled: true
+    graphiql:
+      enabled: true
+      path: /graphql
+    cors:
+      allowed-origins: "*"
+      allowed-methods: "GET,POST,OPTIONS"
+      allowed-headers: "*"
 
 gemini:
   api:

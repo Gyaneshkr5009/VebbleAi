@@ -6,20 +6,20 @@ import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/games/sudoku-app")
-@CrossOrigin(origins = "*")
+@Controller
 @RequiredArgsConstructor
 public class SudokuApiController {
 
     final private SudokuApiService sudokuApiService;
 
-    @QueryMapping
-    public SudokuModel.BoardResponse newBoard(@Argument Integer limit ,
+    @QueryMapping(name = "newboard")
+    public SudokuModel.BoardResponse newBoard(@Argument int limit ,
                                               @Argument String difficulty ,
+                                              @Argument int size,
                                               DataFetchingEnvironment environment){
-        return sudokuApiService.getNewBoard(limit , difficulty);
+        return sudokuApiService.getNewBoard(limit , difficulty , size);
     }
 }

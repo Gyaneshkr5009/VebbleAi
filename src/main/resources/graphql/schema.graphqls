@@ -1,13 +1,18 @@
+scalar Matrix
 type Query {
-    newboard(limit: Int , difficulty : String): BoardResponse
+    newboard(limit: Int = 1,
+        difficulty: String = null,
+        size: Int = 9): BoardResponse
 }
+
 type BoardResponse {
     grids: [Grid]
     results: Int
     message: String
 }
+
 type Grid {
-    value: [[Int]]
-    solution: [[Int]]
+    value: Matrix
+    solution: Matrix
     difficulty: String
 }

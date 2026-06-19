@@ -21,8 +21,8 @@ public class SudokuModel {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Grid {
-        private int[][] value;
-        private int[][] solution;
+        private Character[][] value;
+        private Character[][] solution;
         private Difficulty difficulty;
     }
 }
