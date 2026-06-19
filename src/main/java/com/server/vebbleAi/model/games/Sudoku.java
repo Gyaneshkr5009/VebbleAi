@@ -62,10 +62,10 @@ public class Sudoku {
             int c = cellIndex % size;
             //now we have 2d array coordinates
 
-            if(value[r][c] == '-') continue;
+            if(value[r][c] == ' ') continue;
 
             char backupToken = value[r][c];
-            value[r][c] = '-';
+            value[r][c] = ' ';
             int solutionCount = cntHelper(0,0,MASTER_TOKENS.subList(0,size)); // for counting no of solution possible
 
             if(solutionCount == 1) currentRemovalCount++;
@@ -81,7 +81,7 @@ public class Sudoku {
         int nCol = (col == size-1) ? 0 : col+1;
 
         //for safety
-        if(value[row][col] != '-') {
+        if(value[row][col] != ' ') {
             return cntHelper(nRow , nCol ,activeTokens);
         }
         int totalSolutionsFound  = 0;
@@ -89,7 +89,7 @@ public class Sudoku {
             if(isSafe(row , col , num)){
                 value[row][col] = num;
                 totalSolutionsFound += cntHelper(nRow, nCol, activeTokens);
-                value[row][col] = '-'; // backtrack
+                value[row][col] = ' '; // backtrack
                 if(totalSolutionsFound > 1) return totalSolutionsFound; // early exit
             }
         }
@@ -100,7 +100,7 @@ public class Sudoku {
         this.value = new Character[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                this.value[i][j] = '-'; // Using '-' or ' ' as an empty cell placeholder
+                this.value[i][j] = ' '; // Using '-' or ' ' as an empty cell placeholder
             }
         }
         this.size = size;
@@ -121,7 +121,7 @@ public class Sudoku {
         int nCol = (col == size-1) ? 0 : col+1;
 
         //for safety
-        if(value[row][col] != '-') {
+        if(value[row][col] != ' ') {
             return helper(nRow , nCol ,activeTokens);
         }
 
@@ -129,7 +129,7 @@ public class Sudoku {
             if(isSafe(row , col , num)){
                 value[row][col] = num;
                 if(helper(nRow , nCol , activeTokens)) return true;
-                else value[row][col] = '-'; // backtrack
+                else value[row][col] = ' '; // backtrack
             }
         }
         return false;
@@ -138,8 +138,8 @@ public class Sudoku {
     private boolean isSafe(int row , int col , char num){
         // checking horizontally and vertically
         for(int i = 0 ; i < size ; i++){
-            if(value[i][col] != '-' && value[i][col] == num) return false;
-            if(value[row][i] != '-' &&  value[row][i] == num) return false;
+            if(value[i][col] != ' ' && value[i][col] == num) return false;
+            if(value[row][i] != ' ' &&  value[row][i] == num) return false;
         }
 
         int boxRows;
