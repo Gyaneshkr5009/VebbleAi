@@ -23,14 +23,23 @@ public class Sudoku {
 
         if ("EASY".equalsIgnoreCase(difficulty)) {
             minPercent = 0.35;
-            maxPercent = 0.45;
+            maxPercent = 0.42;
         } else if ("HARD".equalsIgnoreCase(difficulty)) {
-            minPercent = 0.58;
-            maxPercent = 0.68;
+            minPercent = 0.55;
+            maxPercent = 0.62;
         } else {
-            minPercent = 0.46;
-            maxPercent = 0.56;
+            minPercent = 0.42;
+            maxPercent = 0.52;
         }
+
+        if(size == 10 || size == 12){
+            minPercent -= 0.12;
+            maxPercent -= 0.12;
+        } else if (size == 16) {
+            minPercent -= 0.22;
+            maxPercent -= 0.22;
+        }
+        if (minPercent < 0.20) minPercent = 0.20;
 
         this.strtRange = (int) (totalCells * minPercent);
         this.endRange = (int) (totalCells * maxPercent);
@@ -40,9 +49,11 @@ public class Sudoku {
             '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G'
     );
 
+    private int backtrackingStepsCount = 0;
     public void removeElements() {
         int totalCells = size * size;
         ThreadLocalRandom rand = ThreadLocalRandom.current();
+
         //this will generate random values for the desigered range
         int targetToRemove = strtRange + rand.nextInt((endRange-strtRange)+1);
         int currentRemovalCount = 0;
@@ -53,6 +64,7 @@ public class Sudoku {
         }
         // shuffle to remove "targetToRemove" no of elements randomly
         Collections.shuffle(cellCoordinates);
+        List<Character> activeTokens =MASTER_TOKENS.subList(0,size);
 
         // conversion of 2d to 1d array
         for(int cellIndex : cellCoordinates){
@@ -66,15 +78,21 @@ public class Sudoku {
 
             char backupToken = value[r][c];
             value[r][c] = ' ';
-            int solutionCount = cntHelper(0,0,MASTER_TOKENS.subList(0,size)); // for counting no of solution possible
 
-            if(solutionCount == 1) currentRemovalCount++;
+            backtrackingStepsCount = 0;
+            int solutionCount = cntHelper(0,0,activeTokens); // for counting no of solution possible
+
+            if(solutionCount == 1 && backtrackingStepsCount < 8000) currentRemovalCount++;
             else value[r][c] = backupToken;
         }
         System.out.println("Successfully generated puzzle. Removed holes: " + currentRemovalCount);
     }
 
     private int cntHelper(int row, int col, List<Character> activeTokens) {
+        backtrackingStepsCount++;
+        if(backtrackingStepsCount > 8000){
+            return 2;
+        }
         if(row == size) return 1;
 
         int nRow = (col == size-1) ? row+1 : row;
