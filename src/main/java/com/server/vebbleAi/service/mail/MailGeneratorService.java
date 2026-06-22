@@ -1,27 +1,16 @@
 package com.server.vebbleAi.service.mail;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.vebbleAi.dto.EmailRequest;
-import org.springframework.beans.factory.annotation.Value;
+import com.server.vebbleAi.repository.VebbleAiRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class MailGeneratorService {
-    private final WebClient webClient;
-
-    public MailGeneratorService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.build();
-    }
-
-    //@Value annotation is used to inject the values from application.properties or .yml file
-    @Value("${gemini.api.url}")
-    private String geminiApiUrl;
-    @Value("${gemini.api.key1}")
-    private String geminiApiKey;
+    private final VebbleAiRepository vebbleAiRepository;
 
     public String generateEmailReply(EmailRequest emailRequest){
         //Build the prompt
@@ -35,33 +24,7 @@ public class MailGeneratorService {
                 }
         );
         //Do request and get Response
-        String response = webClient.post()
-                .uri("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent")
-                .header("x-goog-api-key" , geminiApiKey)
-                .header("Content-Type" , "application/json")
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-        // Extract response and Return
-        return extractResponseContent(response);
-    }
-
-    private String extractResponseContent(String response) {
-        try{
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode read = mapper.readTree(response);
-
-            return read.path("candidates")
-                    .get(0)
-                    .path("content")
-                    .path("parts")
-                    .get(0)
-                    .path("text")
-                    .asText(); // it returns the value of the JsonNode value;
-        }catch (Exception e){
-            return "Error processing request : " + e.getMessage();
-        }
+        return  vebbleAiRepository.getResponse(requestBody);
     }
 
     private String buildPrompt(EmailRequest emailRequest){
